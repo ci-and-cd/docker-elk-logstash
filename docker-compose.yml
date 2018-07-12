@@ -1,0 +1,72 @@
+
+version: '2.1'
+services:
+  logstash-develop:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: logstash
+    environment:
+    - INPUT_REDIS_HOST=${INPUT_REDIS_HOST:-logstash-redis}
+    - INPUT_REDIS_PORT=${INPUT_REDIS_PORT:-6379}
+    - INPUT_TCP_PORT_JSON=${INPUT_TCP_PORT_JSON:-51401}
+    - INPUT_TCP_PORT_LINE=${INPUT_TCP_PORT_LINE:-51402}
+    - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-elasticsearch-standalone:9200}
+    hostname: logstash
+    image: cirepo/logstash-oss:6.2.3
+    networks:
+      local-network:
+        ipv4_address: 172.16.238.64
+        ipv6_address: 2001:3984:3989::64
+    ports:
+    - 9600:9600
+    - 5044:5044
+    - ${INPUT_TCP_PORT_JSON:-51401}:${INPUT_TCP_PORT_JSON:-51401}
+    - ${INPUT_TCP_PORT_LINE:-51402}:${INPUT_TCP_PORT_LINE:-51402}
+    volumes:
+    - logstash-data:/usr/share/logstash/data
+    - logstash-log:/usr/share/logstash/log
+  logstash-redis-develop:
+    container_name: logstash-redis
+    hostname: logstash-redis
+    image: redis:3.2.12-alpine
+    networks:
+      local-network:
+        ipv4_address: 172.16.238.65
+        ipv6_address: 2001:3984:3989::65
+    ports:
+    - 6379:6379
+    volumes:
+    - logstash-redis-data:/data
+
+
+networks:
+  local-network:
+    external: true
+    driver: bridge
+    enable_ipv6: true
+    ipam:
+      driver: default
+      config:
+      - subnet: 172.16.238.0/24
+      - subnet: 2001:3984:3989::/64
+
+volumes:
+  logstash-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/data/logstash/data
+      o: bind
+  logstash-log:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/data/logstash/log
+      o: bind
+  logstash-redis-data:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/data/logstash-redis
+      o: bind
