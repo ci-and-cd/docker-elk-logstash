@@ -13,7 +13,7 @@ services:
     - INPUT_TCP_PORT_LINE=${INPUT_TCP_PORT_LINE:-51402}
     - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-elasticsearch-standalone:9200}
     hostname: logstash
-    image: cirepo/logstash-oss:6.2.3
+    image: cirepo/logstash-oss:${IMAGE_TAG:-5.6.10} #6.2.3
     networks:
       local-network:
         ipv4_address: 172.16.238.64
