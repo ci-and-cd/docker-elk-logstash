@@ -17,7 +17,7 @@ services:
     networks:
       local-network:
         ipv4_address: 172.16.238.64
-        ipv6_address: 2001:3984:3989::64
+        #ipv6_address: 2001:3984:3989::64
     ports:
     - 9600:9600
     - 5044:5044
@@ -33,7 +33,7 @@ services:
     networks:
       local-network:
         ipv4_address: 172.16.238.65
-        ipv6_address: 2001:3984:3989::65
+        #ipv6_address: 2001:3984:3989::65
     ports:
     - 6379:6379
     volumes:
@@ -49,7 +49,7 @@ networks:
       driver: default
       config:
       - subnet: 172.16.238.0/24
-      - subnet: 2001:3984:3989::/64
+      #- subnet: 2001:3984:3989::/64
 
 volumes:
   logstash-data:
