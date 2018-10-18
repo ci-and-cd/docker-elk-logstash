@@ -23,6 +23,7 @@ services:
     - 5044:5044
     - ${INPUT_TCP_PORT_JSON:-51401}:${INPUT_TCP_PORT_JSON:-51401}
     - ${INPUT_TCP_PORT_LINE:-51402}:${INPUT_TCP_PORT_LINE:-51402}
+    restart: always
     volumes:
     - logstash-data:/usr/share/logstash/data
     - logstash-log:/usr/share/logstash/log
@@ -36,6 +37,7 @@ services:
         #ipv6_address: 2001:3984:3989::65
     ports:
     - 6379:6379
+    restart: always
     volumes:
     - logstash-redis-data:/data
 
