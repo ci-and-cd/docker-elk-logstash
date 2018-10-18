@@ -14,6 +14,14 @@ services:
     - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-elasticsearch-standalone:9200}
     hostname: logstash
     image: cirepo/logstash-oss:${IMAGE_TAG:-5.6.10} #6.2.3
+    labels:
+      deploy.config.commit: ${LABEL_DEPLOY_CONFIG_COMMIT:-unknown}
+      deploy.config.name: ${LABEL_DEPLOY_CONFIG_NAME:-unknown}
+      deploy.config.ref: ${LABEL_DEPLOY_CONFIG_REF:-unknown}
+      deploy.util.commit: ${LABEL_DEPLOY_UTIL_COMMIT:-unknown}
+      deploy.util.ref: ${LABEL_DEPLOY_UTIL_REF:-unknown}
+      instance.name.short: ${LABEL_INSTANCE_NAME_SHORT:-standalone.logstash}
+      instance.name: ${LABEL_INSTANCE_NAME:-127.0.0.1/logstash/standalone}
     networks:
       local-network:
         ipv4_address: 172.16.238.64
@@ -31,6 +39,14 @@ services:
     container_name: logstash-redis
     hostname: logstash-redis
     image: redis:3.2.12-alpine
+    labels:
+      deploy.config.commit: ${LABEL_DEPLOY_CONFIG_COMMIT:-unknown}
+      deploy.config.name: ${LABEL_DEPLOY_CONFIG_NAME:-unknown}
+      deploy.config.ref: ${LABEL_DEPLOY_CONFIG_REF:-unknown}
+      deploy.util.commit: ${LABEL_DEPLOY_UTIL_COMMIT:-unknown}
+      deploy.util.ref: ${LABEL_DEPLOY_UTIL_REF:-unknown}
+      instance.name.short: ${LABEL_INSTANCE_NAME_SHORT:-standalone.logstash-redis}
+      instance.name: ${LABEL_INSTANCE_NAME:-127.0.0.1/logstash-redis/standalone}
     networks:
       local-network:
         ipv4_address: 172.16.238.65
