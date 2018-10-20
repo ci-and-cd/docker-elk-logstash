@@ -8,15 +8,16 @@ services:
       - IMAGE_ARG_LOGSTASH_IMAGE_VERSION=${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-5.6.10}
       context: .
       dockerfile: Dockerfile
-    container_name: logstash
+    container_name: ${CONTAINER_HOST_NAME:-standalone.logstash}
     environment:
-    - INPUT_REDIS_HOST=${INPUT_REDIS_HOST:-logstash-redis}
+    - INPUT_REDIS_HOST=${INPUT_REDIS_HOST:-standalone.logstash}.redis
     - INPUT_REDIS_PORT=${INPUT_REDIS_PORT:-6379}
     - INPUT_TCP_PORT_JSON=${INPUT_TCP_PORT_JSON:-51401}
     - INPUT_TCP_PORT_LINE=${INPUT_TCP_PORT_LINE:-51402}
-    - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-elasticsearch-standalone:9200}
-    hostname: logstash
-    image: cirepo/logstash-oss:${IMAGE_TAG:-5.6.10} #6.2.3
+    - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-standalone.elasticsearch:9200}
+    hostname: ${CONTAINER_HOST_NAME:-standalone.logstash}
+    image: cirepo/logstash:${IMAGE_TAG:-5.6.10} #6.2.3
+    #image: docker.elastic.co/logstash/${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash}:${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-5.6.10}
     labels:
       deploy.config.commit: ${LABEL_DEPLOY_CONFIG_COMMIT:-unknown}
       deploy.config.name: ${LABEL_DEPLOY_CONFIG_NAME:-unknown}
@@ -39,8 +40,8 @@ services:
     - logstash-data:/usr/share/logstash/data
     - logstash-log:/usr/share/logstash/log
   logstash-redis-develop:
-    container_name: logstash-redis
-    hostname: logstash-redis
+    container_name: ${CONTAINER_HOST_NAME:-standalone.logstash}.redis
+    hostname: ${CONTAINER_HOST_NAME:-standalone.logstash}.redis
     image: redis:3.2.12-alpine
     labels:
       deploy.config.commit: ${LABEL_DEPLOY_CONFIG_COMMIT:-unknown}
@@ -48,8 +49,8 @@ services:
       deploy.config.ref: ${LABEL_DEPLOY_CONFIG_REF:-unknown}
       deploy.util.commit: ${LABEL_DEPLOY_UTIL_COMMIT:-unknown}
       deploy.util.ref: ${LABEL_DEPLOY_UTIL_REF:-unknown}
-      instance.name.short: ${LABEL_INSTANCE_NAME_SHORT:-standalone.logstash-redis}
-      instance.name: ${LABEL_INSTANCE_NAME:-127.0.0.1/logstash-redis/standalone}
+      instance.name.short: ${LABEL_INSTANCE_NAME_SHORT:-standalone.logstash.redis}
+      instance.name: ${LABEL_INSTANCE_NAME:-127.0.0.1/logstash.redis/standalone}
     networks:
       local-network:
         ipv4_address: 172.16.238.65
