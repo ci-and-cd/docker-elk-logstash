@@ -17,9 +17,14 @@ ENV LANG='en_US.UTF-8' LC_ALL='en_US.UTF-8'
 
 WORKDIR /usr/share/logstash
 
-RUN chown logstash:logstash /usr/share/logstash/ \
-    && mkdir -p /usr/share/logstash/log \
-    && chown --recursive logstash:logstash config/ data/ log/ pipeline/
+RUN set -ex \
+  && chown logstash:logstash /usr/share/logstash/ \
+  && mkdir -p /usr/share/logstash/log \
+  && chown --recursive logstash:logstash config/ data/ log/ pipeline/
+
+# Remove X-Pack.
+RUN set -ex \
+  && /usr/share/logstash/bin/logstash-plugin remove x-pack
 
 USER logstash
 

@@ -201,6 +201,6 @@ path.logs: /usr/share/logstash/log
 # path.plugins: []
 
 #xpack.monitoring.elasticsearch.url: http://elasticsearch:9200
-xpack.monitoring.elasticsearch.url: "http://standalone.elasticsearch:9200"
+xpack.monitoring.elasticsearch.url: "http://standalone.elk-elasticsearch:9200"
 xpack.monitoring.elasticsearch.username: "logstash_system"
 xpack.monitoring.elasticsearch.password: "changeme"
