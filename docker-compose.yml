@@ -12,8 +12,8 @@ services:
     environment:
     - INPUT_REDIS_HOST=${INPUT_REDIS_HOST:-standalone.elk}-logstash-redis
     - INPUT_REDIS_PORT=${INPUT_REDIS_PORT:-6379}
-    - INPUT_TCP_PORT_JSON=${INPUT_TCP_PORT_JSON:-51401}
-    - INPUT_TCP_PORT_LINE=${INPUT_TCP_PORT_LINE:-51402}
+    - INPUT_JSON_TCP_PORT=${INPUT_JSON_TCP_PORT:-51401}
+    - INPUT_LINE_TCP_PORT=${INPUT_LINE_TCP_PORT:-51402}
     - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-standalone.elk-elasticsearch:9200}
     hostname: ${CONTAINER_HOST_NAME:-standalone.elk}-logstash
     image: cirepo/logstash:${IMAGE_TAG:-5.6.10} #6.2.3
@@ -28,13 +28,13 @@ services:
       instance.name: ${LABEL_INSTANCE_NAME:-127.0.0.1/elk-logstash/standalone}
     networks:
       local-network:
-        ipv4_address: 172.16.238.64
-        #ipv6_address: 2001:3984:3989::64
+        ipv4_address: ${IPV4_ADDRESS:-172.16.238.64}
+        #ipv6_address: ${IPV6_ADDRESS:-2001:3984:3989::64}
     ports:
-    - 9600:9600
-    - 5044:5044
-    - ${INPUT_TCP_PORT_JSON:-51401}:${INPUT_TCP_PORT_JSON:-51401}
-    - ${INPUT_TCP_PORT_LINE:-51402}:${INPUT_TCP_PORT_LINE:-51402}
+    - ${EXTERNAL_LOGSTASH_9600_PORT:-9600}:9600
+    - ${EXTERNAL_LOGSTASH_5044_PORT:-5044}:5044
+    - ${EXTERNAL_LOGSTASH_INPUT_JSON_TCP_PORT:-51401}:${INPUT_JSON_TCP_PORT:-51401}
+    - ${EXTERNAL_LOGSTASH_INPUT_LINE_TCP_PORT:-51402}:${INPUT_LINE_TCP_PORT:-51402}
     restart: always
     volumes:
     - logstash-data:/usr/share/logstash/data
@@ -53,10 +53,10 @@ services:
       instance.name: ${LABEL_INSTANCE_NAME:-127.0.0.1/elk-logstash-redis/standalone}
     networks:
       local-network:
-        ipv4_address: 172.16.238.65
-        #ipv6_address: 2001:3984:3989::65
+        ipv4_address: ${IPV4_ADDRESS:-172.16.238.65}
+        #ipv6_address: ${IPV6_ADDRESS:-2001:3984:3989::65}
     ports:
-    - 6379:6379
+    - ${EXTERNAL_LOGSTASH_REDIS_6379_PORT:-6379}:6379
     restart: always
     volumes:
     - logstash-redis-data:/data
