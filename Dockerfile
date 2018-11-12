@@ -26,6 +26,11 @@ RUN set -ex \
 RUN set -ex \
   && /usr/share/logstash/bin/logstash-plugin remove x-pack
 
+# Install logstash-filter-multiline
+RUN set -ex \
+  && /usr/share/logstash/bin/logstash-plugin install logstash-filter-multiline \
+  && /usr/share/logstash/bin/logstash-plugin list
+
 USER logstash
 
 EXPOSE 9600 5044
