@@ -1,6 +1,6 @@
 version: '2.1'
 services:
-  logstash-develop:
+  develop-logstash:
     build:
       args:
       - IMAGE_ARG_LOGSTASH_IMAGE_NAME=${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash}
@@ -44,7 +44,7 @@ services:
     - logstash-data:/usr/share/logstash/data
     - logstash-log:/usr/share/logstash/log
 
-#  logstash-redis-develop:
+#  develop-logstash-redis:
 #    container_name: ${CONTAINER_HOST_NAME:-standalone.elk}-logstash-redis
 #    hostname: ${CONTAINER_HOST_NAME:-standalone.elk}-logstash-redis
 #    image: redis:3.2.12-alpine
