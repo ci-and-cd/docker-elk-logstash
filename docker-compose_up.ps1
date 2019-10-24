@@ -6,5 +6,11 @@ Get-ChildItem Env:PWD
 $env:IMAGE_ARG_LOGSTASH_IMAGE_NAME = 'logstash'
 
 docker-compose down -v
+
+$confirmation = Read-Host "Do you want clear data:"
+if ($confirmation -eq "y") {
+    Remove-Item -Path "data\logstash\data\*" -Exclude ".gitignore", "sample.log" -Recurse;
+}
+
 docker-compose up -d
 docker-compose logs -f
