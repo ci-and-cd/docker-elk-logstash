@@ -2,7 +2,7 @@
 ARG IMAGE_ARG_LOGSTASH_IMAGE_NAME
 ARG IMAGE_ARG_LOGSTASH_IMAGE_VERSION
 
-FROM docker.elastic.co/logstash/${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash}:${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-5.6.10} as base
+FROM docker.elastic.co/logstash/${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash-oss}:${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-7.4.0} as base
 
 FROM scratch
 
@@ -22,14 +22,18 @@ RUN set -ex \
   && mkdir -p /usr/share/logstash/log \
   && chown --recursive logstash:logstash config/ data/ log/ pipeline/
 
+# Unable to remove plugin because of error: "You are using the standard distribution of logstash.
+# Please install the OSS-only distribution to remove X-Pack features."
 # Remove X-Pack.
-RUN set -ex \
-  && /usr/share/logstash/bin/logstash-plugin remove x-pack
+#RUN set -ex \
+#  && /usr/share/logstash/bin/logstash-plugin remove x-pack
 
 # Install logstash-filter-multiline
 RUN set -ex \
-  && /usr/share/logstash/bin/logstash-plugin install logstash-filter-multiline \
-  && /usr/share/logstash/bin/logstash-plugin list
+  && bin/logstash-plugin install logstash-filter-multiline \
+  && bin/logstash-plugin list \
+  && cat config/logstash.yml \
+  && bin/logstash --config.test_and_exit -f pipeline/logstash.conf
 
 USER logstash
 

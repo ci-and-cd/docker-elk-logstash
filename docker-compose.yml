@@ -3,21 +3,22 @@ services:
   develop-logstash:
     build:
       args:
-      - IMAGE_ARG_LOGSTASH_IMAGE_NAME=${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash}
-      - IMAGE_ARG_LOGSTASH_IMAGE_VERSION=${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-5.6.10}
+        - IMAGE_ARG_LOGSTASH_IMAGE_NAME=${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash-oss}
+        - IMAGE_ARG_LOGSTASH_IMAGE_VERSION=${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-7.4.0}
       context: .
       dockerfile: Dockerfile
     container_name: ${CONTAINER_HOST_NAME:-standalone.elk}-logstash
     environment:
-    - INPUT_REDIS_HOST=${INPUT_REDIS_HOST:-standalone.redis}
-    - INPUT_REDIS_PASS=${INPUT_REDIS_PASS:-admin_pass}
-    - INPUT_REDIS_PORT=${INPUT_REDIS_PORT:-6379}
-    - INPUT_JSON_TCP_PORT=${INPUT_JSON_TCP_PORT:-51401}
-    - INPUT_LINE_TCP_PORT=${INPUT_LINE_TCP_PORT:-51402}
-    - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-standalone.elk-elasticsearch:9200}
+      #- INPUT_REDIS_HOST=${INPUT_REDIS_HOST:-standalone.redis}
+      #- INPUT_REDIS_PASS=${INPUT_REDIS_PASS:-admin_pass}
+      #- INPUT_REDIS_PORT=${INPUT_REDIS_PORT:-6379}
+      - INPUT_JSON_TCP_PORT=${INPUT_JSON_TCP_PORT:-51401}
+      - INPUT_LINE_TCP_PORT=${INPUT_LINE_TCP_PORT:-51402}
+      - OUTPUT_ELASTICSEARCH_HOSTS=${OUTPUT_ELASTICSEARCH_HOSTS:-standalone.elk-elasticsearch:9200}
+      - PIPELINE_WORKERS=${PIPELINE_WORKERS:-3}
     hostname: ${CONTAINER_HOST_NAME:-standalone.elk}-logstash
-    image: cirepo/logstash:${IMAGE_TAG:-5.6.10} #6.2.3
-    #image: docker.elastic.co/logstash/${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash}:${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-5.6.10}
+    image: cirepo/logstash:${IMAGE_TAG:-7.4.0} #6.2.3
+    #image: docker.elastic.co/logstash/${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash-oss}:${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-7.4.0}
     labels:
       deploy.config.commit: ${LABEL_DEPLOY_CONFIG_COMMIT:-unknown}
       deploy.config.name: ${LABEL_DEPLOY_CONFIG_NAME:-unknown}
@@ -31,18 +32,19 @@ services:
         ipv4_address: ${IPV4_ADDRESS:-172.16.238.64}
         #ipv6_address: ${IPV6_ADDRESS:-2001:3984:3989::64}
     ports:
-    # GELF TCP/UDP
-    - ${EXTERNAL_LOGSTASH_GELF_12201_PORT:-12201}:12201
-    - ${EXTERNAL_LOGSTASH_GELF_12201_PORT:-12201}:12201/udp
+      # GELF TCP/UDP
+      - ${EXTERNAL_LOGSTASH_GELF_12201_PORT:-12201}:12201
+      - ${EXTERNAL_LOGSTASH_GELF_12201_PORT:-12201}:12201/udp
 
-    - ${EXTERNAL_LOGSTASH_9600_PORT:-9600}:9600
-    - ${EXTERNAL_LOGSTASH_5044_PORT:-5044}:5044
-    - ${EXTERNAL_LOGSTASH_INPUT_JSON_TCP_PORT:-51401}:${INPUT_JSON_TCP_PORT:-51401}
-    - ${EXTERNAL_LOGSTASH_INPUT_LINE_TCP_PORT:-51402}:${INPUT_LINE_TCP_PORT:-51402}
+      - ${EXTERNAL_LOGSTASH_9600_PORT:-9600}:9600
+      - ${EXTERNAL_LOGSTASH_5044_PORT:-5044}:5044
+      - ${EXTERNAL_LOGSTASH_INPUT_JSON_TCP_PORT:-51401}:${INPUT_JSON_TCP_PORT:-51401}
+      - ${EXTERNAL_LOGSTASH_INPUT_LINE_TCP_PORT:-51402}:${INPUT_LINE_TCP_PORT:-51402}
     restart: always
     volumes:
-    - logstash-data:/usr/share/logstash/data
-    - logstash-log:/usr/share/logstash/log
+      - logstash-data:/usr/share/logstash/data
+      - logstash-log:/usr/share/logstash/log
+      - logstash-pipeline:/usr/share/logstash/pipeline
 
 #  develop-logstash-redis:
 #    container_name: ${CONTAINER_HOST_NAME:-standalone.elk}-logstash-redis
@@ -61,23 +63,24 @@ services:
 #        ipv4_address: ${IPV4_ADDRESS:-172.16.238.65}
 #        #ipv6_address: ${IPV6_ADDRESS:-2001:3984:3989::65}
 #    ports:
-#    - ${EXTERNAL_LOGSTASH_REDIS_6379_PORT:-6379}:6379
+#      - ${EXTERNAL_LOGSTASH_REDIS_6379_PORT:-6379}:6379
 #    restart: always
 #    volumes:
-#    - logstash-redis-data:/data
-
+#      - logstash-redis-data:/data
 
 networks:
   local-network:
     external: true
+    driver_opts:
+      com.docker.network.driver.mtu: 1450
     driver: bridge
-    enable_ipv6: true
+    enable_ipv6: false
     ipam:
       driver: default
       config:
-      - subnet: 172.16.238.0/24
-      #- subnet: 2001:3984:3989::/64
-
+        - gateway: 172.16.238.1
+        - subnet: 172.16.238.0/24
+        #- subnet: 2001:3984:3989::/64
 
 volumes:
   logstash-data:
@@ -91,6 +94,12 @@ volumes:
     driver_opts:
       type: none
       device: ${PWD}/data/logstash/log
+      o: bind
+  logstash-pipeline:
+    driver: local
+    driver_opts:
+      type: none
+      device: ${PWD}/data/logstash/pipeline
       o: bind
 
 #  logstash-redis-data:
