@@ -7,9 +7,9 @@ $env:IMAGE_ARG_LOGSTASH_IMAGE_NAME = 'logstash'
 
 docker-compose down -v
 
-$confirmation = Read-Host "Do you want clear data:"
+$confirmation = Read-Host "Do you want clear data"
 if ($confirmation -eq "y") {
-    Remove-Item -Path "data\logstash\data\*" -Exclude ".gitignore", "sample.log" -Recurse;
+    Remove-Item -Path "data\logstash\data\*" -Exclude ".gitignore", "logstash.json", "sample.log" -Recurse;
 }
 
 docker-compose up -d
