@@ -18,3 +18,8 @@ docker pull docker.elastic.co/logstash/logstash-oss:6.2.3
 
 `docker run -e PIPELINE_WORKERS=3 --rm -it cirepo/logstash:${IMAGE_TAG:-7.4.0} bin/logstash --config.test_and_exit -f pipeline/logstash.conf`
 
+
+### Find out why it is slow
+
+http://localhost:9600/_node/stats/pipelines?pretty
+http://localhost:9600/_node/stats/pipelines/main?pretty

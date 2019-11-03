@@ -34,11 +34,11 @@ path.data: /usr/share/logstash/data
 #
 # This defaults to the number of the host's CPU cores.
 #
-pipeline.workers: 4
+pipeline.workers: 6
 #
 # How many events to retrieve from inputs before sending to filters+workers
 #
-pipeline.batch.size: 1000 
+pipeline.batch.size: 10000
 #
 # How long to wait before dispatching an undersized batch to filters+workers
 # Value is in milliseconds.
