@@ -35,6 +35,9 @@ RUN set -ex \
   && cat config/logstash.yml \
   && bin/logstash --config.test_and_exit -f pipeline/logstash.conf
 
+RUN set -ex \
+  && bin/logstash-plugin install --no-verify logstash-filter-simple_kv
+
 USER logstash
 
 EXPOSE 9600 5044
