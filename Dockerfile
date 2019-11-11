@@ -2,7 +2,7 @@
 ARG IMAGE_ARG_LOGSTASH_IMAGE_NAME
 ARG IMAGE_ARG_LOGSTASH_IMAGE_VERSION
 
-FROM docker.elastic.co/logstash/${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash-oss}:${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-7.4.0} as base
+FROM docker.elastic.co/logstash/${IMAGE_ARG_LOGSTASH_IMAGE_NAME:-logstash}:${IMAGE_ARG_LOGSTASH_IMAGE_VERSION:-7.4.2} as base
 
 FROM scratch
 
@@ -36,7 +36,9 @@ RUN set -ex \
   && bin/logstash --config.test_and_exit -f pipeline/logstash.conf
 
 RUN set -ex \
-  && bin/logstash-plugin install --no-verify logstash-filter-simple_kv
+  && curl -sSL -o /usr/share/logstash/logstash-filter-simple_kv-1.0.1.gem https://rubygems.org/downloads/logstash-filter-simple_kv-1.0.1.gem \
+  && bin/logstash-plugin install --no-verify --local logstash-filter-simple_kv-1.0.1.gem
+#  && bin/logstash-plugin install --no-verify --version 1.0.1 logstash-filter-simple_kv
 
 USER logstash
 
