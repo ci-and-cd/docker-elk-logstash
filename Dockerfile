@@ -37,8 +37,10 @@ RUN set -ex \
 
 RUN set -ex \
   && curl -sSL -o /usr/share/logstash/logstash-filter-simple_kv-1.0.1.gem https://rubygems.org/downloads/logstash-filter-simple_kv-1.0.1.gem \
-  && bin/logstash-plugin install --no-verify --local logstash-filter-simple_kv-1.0.1.gem
-#  && bin/logstash-plugin install --no-verify --version 1.0.1 logstash-filter-simple_kv
+  && bin/logstash-plugin install --no-verify --local logstash-filter-simple_kv-1.0.1.gem \
+  && curl -sSL -o /usr/share/logstash/logstash-filter-time_chunks-1.0.0.gem https://rubygems.org/downloads/logstash-filter-time_chunks-1.0.0.gem \
+  && bin/logstash-plugin install --no-verify --local logstash-filter-time_chunks-1.0.0.gem
+#  && bin/logstash-plugin install --no-verify --version 1.0.0 logstash-filter-time_chunks
 
 USER logstash
 
