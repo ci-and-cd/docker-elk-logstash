@@ -4,6 +4,7 @@ $env:PWD = ($p.substring(0,2).ToLower() + $p.substring(2)).replace("\", "/")
 Get-ChildItem Env:PWD
 
 $env:IMAGE_ARG_LOGSTASH_IMAGE_NAME = 'logstash'
+$env:LOGSTASH_ENVIRONMENT = 'dev'
 #$env:OUTPUT_ELASTICSEARCH_HOSTS = '172.16.238.62:9200'
 $env:OUTPUT_ELASTICSEARCH_HOSTS = '10.3.5.7:9200'
 
