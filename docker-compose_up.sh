@@ -7,7 +7,7 @@ docker-compose down -v
 
 read -p "Do you want clear data: " -n 1 -r
 if [[ $REPLY =~ ^[Yy]$ ]]; then
-    find data/logstash/data ! -name '.gitignore' ! -name 'logstash.json' ! -name 'logstash-*.json' ! -name 'syslog-*.log' -type f -exec rm -rf {} +
+    find data/logstash/data ! -name '.gitignore' ! -name 'logstash.json' ! -name 'logstash-*.json' ! -name 'syslog-*.log' ! -name '*.sh' -type f -exec rm -rf {} +
 fi
 
 docker-compose up -d
