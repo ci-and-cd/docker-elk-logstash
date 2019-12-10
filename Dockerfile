@@ -32,14 +32,14 @@ RUN set -ex \
 RUN set -ex \
   && bin/logstash-plugin install logstash-filter-multiline \
   && bin/logstash-plugin list \
-  && cat config/logstash.yml \
-  && bin/logstash --config.test_and_exit -f pipeline/logstash.conf
+  && cat config/logstash.yml
 
 RUN set -ex \
   && curl -sSL -o /usr/share/logstash/logstash-filter-simple_kv-1.0.1.gem https://rubygems.org/downloads/logstash-filter-simple_kv-1.0.1.gem \
   && bin/logstash-plugin install --no-verify --local logstash-filter-simple_kv-1.0.1.gem \
   && curl -sSL -o /usr/share/logstash/logstash-filter-time_chunks-1.1.1.gem https://rubygems.org/downloads/logstash-filter-time_chunks-1.1.1.gem \
-  && bin/logstash-plugin install --no-verify --local logstash-filter-time_chunks-1.1.1.gem
+  && bin/logstash-plugin install --no-verify --local logstash-filter-time_chunks-1.1.1.gem \
+  && bin/logstash --config.test_and_exit -f pipeline/logstash.conf
 #  && bin/logstash-plugin install --no-verify --version 1.1.1 logstash-filter-time_chunks
 
 USER logstash
